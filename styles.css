@@ -1884,6 +1884,11 @@ html {
 }
 
 /* ---------- MODAL DE PREFERÊNCIAS ---------- */
+.cookie-banner[hidden],
+.cookie-modal[hidden] {
+  display: none !important;
+}
+
 .cookie-modal {
   position: fixed;
   inset: 0;
