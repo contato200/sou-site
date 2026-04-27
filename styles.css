@@ -238,7 +238,8 @@ body::after {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: var(--space-4) 0;
+  padding-top: calc(var(--space-4) + env(safe-area-inset-top, 0px));
+  padding-bottom: var(--space-4);
   background: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -246,7 +247,8 @@ body::after {
   transition: padding 0.3s ease, background 0.3s ease;
 }
 .nav--scrolled {
-  padding: 0.625rem 0;
+  padding-top: calc(0.625rem + env(safe-area-inset-top, 0px));
+  padding-bottom: 0.625rem;
   background: rgba(10, 10, 10, 0.95);
 }
 
@@ -288,7 +290,7 @@ body::after {
   .nav__inner { padding: 0 var(--space-5); }
   .nav__links {
     position: fixed;
-    inset: 64px 0 auto 0;
+    inset: calc(64px + env(safe-area-inset-top, 0px)) 0 auto 0;
     background: var(--bg);
     flex-direction: column;
     padding: var(--space-7) var(--space-5);
@@ -1664,7 +1666,10 @@ body::after {
   }
 
   /* Nav: reduzir altura pra dar mais espaço */
-  .nav { padding: 0.875rem 0; }
+  .nav {
+    padding-top: calc(0.875rem + env(safe-area-inset-top, 0px));
+    padding-bottom: 0.875rem;
+  }
   .logo { font-size: 1.375rem; }
 
   /* Footer mobile: tipografia */
