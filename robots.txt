@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://consultoria.souproducoesaudiovisuais.com.br/sitemap.xml
+Sitemap: https://consultoria.souproducoesaudiovisuais.com/sitemap.xml
