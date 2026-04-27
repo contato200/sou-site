@@ -36,21 +36,34 @@
 
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- ============ ANALYTICS — substituir os IDs após criação ============ -->
+  <!-- ============ ANALYTICS COM CONSENT MODE V2 (LGPD compliant) ============ -->
 
-  <!-- Google Analytics 4 — substituir G-FNYVXQLHEL pelo Measurement ID real -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FNYVXQLHEL"></script>
+  <!-- Google Consent Mode v2 — DEFAULT DENIED até user dar consentimento -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'functionality_storage': 'granted',
+      'security_storage': 'granted',
+      'wait_for_update': 500
+    });
     gtag('js', new Date());
+  </script>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FNYVXQLHEL"></script>
+  <script>
     gtag('config', 'G-FNYVXQLHEL', {
       'send_page_view': true,
       'anonymize_ip': true
     });
   </script>
 
-  <!-- Meta Pixel — substituir 1259069332610285 pelo Pixel ID real (16 dígitos) -->
+  <!-- Meta Pixel — inicia em modo revoked, ativa apenas após consent -->
   <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -60,6 +73,7 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('consent', 'revoke');
     fbq('init', '1259069332610285');
     fbq('track', 'PageView');
   </script>
@@ -1018,10 +1032,89 @@
       </div>
       <div class="footer__base">
         <p>© 2026 SOU. Todos os direitos reservados.</p>
-        <p><a href="#">Política de Privacidade</a> · <a href="#">Termos de Uso</a></p>
+        <p>
+          <a href="/privacidade.html">Política de Privacidade</a> ·
+          <a href="/termos.html">Termos de Uso</a> ·
+          <a href="#" id="reopen-cookies">Preferências de cookies</a>
+        </p>
       </div>
     </div>
   </footer>
+
+  <!-- ============ BANNER DE COOKIES (LGPD) ============ -->
+  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-labelledby="cookie-banner-title" aria-describedby="cookie-banner-desc" hidden>
+    <div class="cookie-banner__inner">
+      <div class="cookie-banner__content">
+        <h3 id="cookie-banner-title" class="cookie-banner__title">🍪 Sua privacidade importa</h3>
+        <p id="cookie-banner-desc" class="cookie-banner__desc">
+          Usamos cookies para entender como você navega no site, melhorar sua experiência e exibir conteúdo relevante. Os cookies necessários estão sempre ativos. Os de analytics e marketing dependem da sua escolha.
+        </p>
+        <p class="cookie-banner__links">
+          <a href="/privacidade.html" target="_blank">Política de Privacidade</a> ·
+          <a href="/termos.html" target="_blank">Termos de Uso</a>
+        </p>
+      </div>
+      <div class="cookie-banner__actions">
+        <button class="cookie-btn cookie-btn--reject" id="cookie-reject" type="button">Rejeitar opcionais</button>
+        <button class="cookie-btn cookie-btn--customize" id="cookie-customize" type="button">Personalizar</button>
+        <button class="cookie-btn cookie-btn--accept" id="cookie-accept" type="button">Aceitar todos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL DE PREFERÊNCIAS ============ -->
+  <div id="cookie-modal" class="cookie-modal" role="dialog" aria-labelledby="cookie-modal-title" hidden>
+    <div class="cookie-modal__backdrop" id="cookie-modal-backdrop"></div>
+    <div class="cookie-modal__content">
+      <button class="cookie-modal__close" id="cookie-modal-close" aria-label="Fechar" type="button">×</button>
+
+      <h3 id="cookie-modal-title" class="cookie-modal__title">Preferências de cookies</h3>
+      <p class="cookie-modal__desc">
+        Escolha quais categorias de cookies você quer ativar. Você pode alterar essas preferências a qualquer momento.
+      </p>
+
+      <div class="cookie-category">
+        <div class="cookie-category__head">
+          <h4>Cookies necessários</h4>
+          <span class="cookie-category__badge">Sempre ativos</span>
+        </div>
+        <p class="cookie-category__desc">
+          Essenciais para o site funcionar (sessão, preferências). Não podem ser desativados.
+        </p>
+      </div>
+
+      <div class="cookie-category">
+        <div class="cookie-category__head">
+          <h4>Cookies de analytics</h4>
+          <label class="cookie-toggle">
+            <input type="checkbox" id="consent-analytics" checked />
+            <span class="cookie-toggle__slider"></span>
+          </label>
+        </div>
+        <p class="cookie-category__desc">
+          Google Analytics — mede o desempenho do site de forma anônima e agregada. Ajuda a entender o que funciona e o que não funciona.
+        </p>
+      </div>
+
+      <div class="cookie-category">
+        <div class="cookie-category__head">
+          <h4>Cookies de marketing</h4>
+          <label class="cookie-toggle">
+            <input type="checkbox" id="consent-marketing" checked />
+            <span class="cookie-toggle__slider"></span>
+          </label>
+        </div>
+        <p class="cookie-category__desc">
+          Meta Pixel — permite medir o desempenho de campanhas no Facebook e Instagram, e exibir anúncios mais relevantes.
+        </p>
+      </div>
+
+      <div class="cookie-modal__actions">
+        <button class="cookie-btn cookie-btn--reject" id="cookie-modal-reject" type="button">Rejeitar opcionais</button>
+        <button class="cookie-btn cookie-btn--accept" id="cookie-modal-save" type="button">Salvar preferências</button>
+      </div>
+    </div>
+  </div>
 
   <script src="scripts.js"></script>
 

@@ -281,6 +281,150 @@
   // ============ HERO STAKES INDICADOR ============
   document.querySelector('.hero__stakes')?.classList.add('stakes-loaded');
 
+  // ============ COOKIE CONSENT (LGPD) ============
+  const CONSENT_KEY = 'sou_cookie_consent';
+  const CONSENT_VERSION = '1.0';
+  const CONSENT_EXPIRY_DAYS = 365;
+
+  const banner = document.getElementById('cookie-banner');
+  const modal = document.getElementById('cookie-modal');
+  const reopenLink = document.getElementById('reopen-cookies');
+
+  if (!banner || !modal) return;
+
+  const acceptBtn = document.getElementById('cookie-accept');
+  const rejectBtn = document.getElementById('cookie-reject');
+  const customizeBtn = document.getElementById('cookie-customize');
+  const modalClose = document.getElementById('cookie-modal-close');
+  const modalBackdrop = document.getElementById('cookie-modal-backdrop');
+  const modalSave = document.getElementById('cookie-modal-save');
+  const modalReject = document.getElementById('cookie-modal-reject');
+  const analyticsToggle = document.getElementById('consent-analytics');
+  const marketingToggle = document.getElementById('consent-marketing');
+
+  const getStoredConsent = () => {
+    try {
+      const raw = localStorage.getItem(CONSENT_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      const expiry = new Date(data.timestamp);
+      expiry.setDate(expiry.getDate() + CONSENT_EXPIRY_DAYS);
+      if (new Date() > expiry || data.version !== CONSENT_VERSION) {
+        localStorage.removeItem(CONSENT_KEY);
+        return null;
+      }
+      return data;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const saveConsent = (analytics, marketing) => {
+    const data = {
+      version: CONSENT_VERSION,
+      timestamp: new Date().toISOString(),
+      analytics,
+      marketing,
+      necessary: true
+    };
+    localStorage.setItem(CONSENT_KEY, JSON.stringify(data));
+    applyConsent(analytics, marketing);
+  };
+
+  const applyConsent = (analytics, marketing) => {
+    // Google Consent Mode v2
+    if (typeof gtag === 'function') {
+      gtag('consent', 'update', {
+        'analytics_storage': analytics ? 'granted' : 'denied',
+        'ad_storage': marketing ? 'granted' : 'denied',
+        'ad_user_data': marketing ? 'granted' : 'denied',
+        'ad_personalization': marketing ? 'granted' : 'denied'
+      });
+    }
+
+    // Meta Pixel consent
+    if (typeof fbq === 'function') {
+      if (marketing) {
+        fbq('consent', 'grant');
+      } else {
+        fbq('consent', 'revoke');
+      }
+    }
+  };
+
+  const showBanner = () => {
+    banner.hidden = false;
+  };
+
+  const hideBanner = () => {
+    banner.hidden = true;
+  };
+
+  const openModal = () => {
+    const stored = getStoredConsent();
+    if (stored) {
+      analyticsToggle.checked = stored.analytics;
+      marketingToggle.checked = stored.marketing;
+    }
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  };
+
+  // Bind events
+  acceptBtn?.addEventListener('click', () => {
+    saveConsent(true, true);
+    hideBanner();
+  });
+
+  rejectBtn?.addEventListener('click', () => {
+    saveConsent(false, false);
+    hideBanner();
+  });
+
+  customizeBtn?.addEventListener('click', openModal);
+
+  modalClose?.addEventListener('click', closeModal);
+  modalBackdrop?.addEventListener('click', closeModal);
+
+  modalSave?.addEventListener('click', () => {
+    saveConsent(analyticsToggle.checked, marketingToggle.checked);
+    closeModal();
+    hideBanner();
+  });
+
+  modalReject?.addEventListener('click', () => {
+    analyticsToggle.checked = false;
+    marketingToggle.checked = false;
+    saveConsent(false, false);
+    closeModal();
+    hideBanner();
+  });
+
+  reopenLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openModal();
+  });
+
+  // Inicialização
+  const stored = getStoredConsent();
+  if (stored) {
+    applyConsent(stored.analytics, stored.marketing);
+  } else {
+    showBanner();
+  }
+
+  // ESC fecha modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) {
+      closeModal();
+    }
+  });
+
   // ============ TRACKING DE CLIQUES NO WHATSAPP ============
   document.querySelectorAll('[data-track-whatsapp]').forEach(link => {
     link.addEventListener('click', () => {
