@@ -451,11 +451,11 @@
       btn.disabled = true;
 
       try {
-        const formData = new FormData(form);
+        const payload = Object.fromEntries(new FormData(form).entries());
         const response = await fetch(form.action, {
           method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
         });
 
         if (response.ok) {
