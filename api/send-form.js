@@ -95,9 +95,9 @@ export default async function handler(req, res) {
     `</div>`;
 
   const headers = [
-    `From: "SOU · Site" <${user}>`,
+    `From: ${mimeWord("SOU · Site")} <${user}>`,
     `To: ${to}`,
-    `Reply-To: "${nome.replace(/"/g, "")}" <${email}>`,
+    `Reply-To: ${mimeWord(nome.replace(/"/g, ""))} <${email}>`,
     `Subject: ${mimeWord(subject)}`,
     "MIME-Version: 1.0",
     "Content-Type: text/html; charset=UTF-8",
