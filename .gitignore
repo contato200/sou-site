@@ -1,5 +1,3 @@
 .vercel
 node_modules
-_smtp-test.mjs
-_oauth-test.mjs
-_gmailapi-test.mjs
+_*.mjs
